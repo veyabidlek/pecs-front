@@ -2,20 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+/* src/app/globals.css */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --main-color: #619451;
+  --navy-blue: #579ca3;
+  --light-blue: #b8d5d9;
+  --light-purple: #baa1be;
+  --orange: #d57426;
+  --yellowish: #e2ad51;
+  --text-color: #404042;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+html {
+  scroll-behavior: smooth;
 }
