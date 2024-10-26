@@ -24,22 +24,17 @@ const Navbar = () => {
   const is_cr = false; // Replace with your logic for is_cr
 
   return (
-    <header className="sticky top-0 z-100 bg-white">
+    <header className="sticky top-0 z-50 bg-white">
       <nav className="flex justify-between items-center py-6">
         <div className="mr-8">
-          {" "}
-          {/* Added margin-right */}
           <Image
             src="/images/logo_soylem_full.png"
             alt="Logo"
             width={100}
             height={40}
-          />{" "}
-          {/* Replace with actual path and dimensions */}
+          />
         </div>
         <div className="hidden lg:flex space-x-8">
-          {" "}
-          {/* Show navigation links on larger screens */}
           <Link
             href="#homePage"
             className="text-[var(--main-color)] hover:text-[var(--main-color)] font-bold"
@@ -58,8 +53,7 @@ const Navbar = () => {
           >
             О нас
           </Link>
-        </div>{" "}
-        {/* Close the nav-center-elements div */}
+        </div>
         <div>
           {user.isAuthenticated ? (
             <div className="relative inline-block text-left">
@@ -70,7 +64,7 @@ const Navbar = () => {
                 aria-expanded={dropdownOpen}
                 aria-haspopup="true"
               >
-                <User className="mr-2 h-5 w-5" /> {/* Lucide Icon */}
+                <User className="mr-2 h-5 w-5" />
                 {user.firstName || user.lastName
                   ? `${user.firstName} ${user.lastName}`
                   : user.username}
@@ -79,18 +73,16 @@ const Navbar = () => {
                   aria-hidden="true"
                 />
               </button>
-              <div //Conditional rendering using ternary operator
+              <div
                 className={`${
                   dropdownOpen ? "block" : "hidden"
-                }  absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-[var(--light-main)] ring-1 ring-black ring-opacity-5 focus:outline-none`}
+                } bg-white absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-[var(--light-main)] ring-1 ring-black ring-opacity-5 focus:outline-none z-200`} // Increase z-index here
                 role="menu"
                 aria-orientation="vertical"
                 aria-labelledby="menu-button"
               >
-                {/* ...dropdown content (see below) */}
-
                 <a
-                  href={user.isStaff ? "/admin" : "/profile"} // conditional link
+                  href={user.isStaff ? "/admin" : "/profile"}
                   className="text-gray-700 block px-4 py-2 text-sm hover:bg-[var(--main-color)] hover:text-white"
                   role="menuitem"
                   id="menu-item-0"
@@ -99,7 +91,7 @@ const Navbar = () => {
                 </a>
                 {is_cr ? (
                   <a
-                    href="/my_boards" // Add your link here for my_boards
+                    href="/my_boards"
                     className="text-gray-700 block px-4 py-2 text-sm hover:bg-[var(--main-color)] hover:text-white"
                     role="menuitem"
                     id="menu-item-1"
@@ -107,7 +99,7 @@ const Navbar = () => {
                     Мои доски
                   </a>
                 ) : (
-                  <a // Add your link for "Мои подопечные"
+                  <a
                     href="#"
                     className="text-gray-700 block px-4 py-2 text-sm hover:bg-[var(--main-color)] hover:text-white"
                     role="menuitem"
@@ -132,7 +124,7 @@ const Navbar = () => {
                 >
                   Библиотека
                 </Link>
-                <a // Add your link for "Настройки"
+                <a
                   href="#"
                   className="text-gray-700 block px-4 py-2 text-sm hover:bg-[var(--main-color)] hover:text-white"
                   role="menuitem"
@@ -148,20 +140,15 @@ const Navbar = () => {
                 >
                   Выйти
                 </a>
-              </div>{" "}
-              {/* Close dropdown content div */}
+              </div>
             </div>
           ) : (
             <div className="flex space-x-4">
-              {" "}
-              {/* Added spacing */}
               <Link
                 href="/login"
                 className="font-bold text-[var(--text-color)]"
               >
-                <User className="mr-2 h-5 w-5 inline-block align-middle" />{" "}
-                {/* Lucide Icon */}
-                {/* Added inline-block and align-middle for better icon alignment */}
+                <User className="mr-2 h-5 w-5 inline-block align-middle" />
                 Войти
               </Link>
               <Link
