@@ -16,9 +16,9 @@ const Navbar = () => {
     // Replace with your actual user data fetching logic
     isAuthenticated: true, // Or false, depending on authentication state
     isStaff: false, // Or true, based on user role
-    firstName: "John", // Replace with user's first name
-    lastName: "Doe", // Replace with user's last name
-    username: "johndoe",
+    firstName: "User", // Replace with user's first name
+    lastName: "", // Replace with user's last name
+    username: "user",
   };
 
   const is_cr = false; // Replace with your logic for is_cr

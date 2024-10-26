@@ -40,7 +40,7 @@ export function Team() {
 
           {/* Second image group */}
           <div className="absolute bg-[#2B5C34] w-[350px] h-[350px] top-[253px] left-[297px] rounded-3xl" />
-          <div className="absolute top-60 left-[280px] z-10">
+          {/* <div className="absolute top-60 left-[280px] z-10">
             <Image
               src="/images/index_team2.png"
               alt="Team photo 2"
@@ -49,7 +49,7 @@ export function Team() {
               className="rounded-3xl"
               priority
             />
-          </div>
+          </div> */}
         </div>
       </div>
     </section>
