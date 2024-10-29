@@ -25,53 +25,37 @@ function AdvantageItem({ bgColor, title, description }: AdvantageItemProps) {
 
 export function Advantages() {
   return (
-    <section className="relative pt-36 inline-block w-full">
+    <section className="relative pt-16 md:pt-36 px-4 md:px-0">
       <div className="w-full text-center">
         <h6 className="mx-auto border-2 border-navy-blue inline-block px-5 py-1.5 rounded-full text-navy-blue font-bold">
           Наши преимущества
         </h6>
-        <h4 className="mx-auto text-navy-blue font-bold mt-4">
+        <h4 className="mx-auto text-navy-blue font-bold mt-4 text-lg md:text-xl">
           Преимущества платформы SӨYLEM
         </h4>
       </div>
 
-      <div className="mt-5">
-        <table>
-          <tbody>
-            <tr>
-              <td className="py-5 pr-5 pb-12">
-                <AdvantageItem
-                  bgColor="bg-navy-blue"
-                  title="Индивидуальные настройки"
-                  description="Приложение позволяет настраивать карточки под потребности каждого ребенка."
-                />
-              </td>
-              <td className="py-5 pr-5 pb-12">
-                <AdvantageItem
-                  bgColor="bg-primary"
-                  title="Реалистичные карточки"
-                  description="Приложение позволяет настраивать карточки под потребности каждого ребенка."
-                />
-              </td>
-            </tr>
-            <tr>
-              <td className="py-5 pr-5 pb-12">
-                <AdvantageItem
-                  bgColor="bg-light-purple"
-                  title="Распознавание и создание речи"
-                  description="Приложение позволяет настраивать карточки под потребности каждого ребенка."
-                />
-              </td>
-              <td className="py-5 pr-5 pb-12">
-                <AdvantageItem
-                  bgColor="bg-orange"
-                  title="Отслеживание прогресса"
-                  description="Приложение позволяет настраивать карточки под потребности каждого ребенка."
-                />
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+        <AdvantageItem
+          bgColor="bg-navy-blue"
+          title="Индивидуальные настройки"
+          description="Приложение позволяет настраивать карточки под потребности каждого ребенка."
+        />
+        <AdvantageItem
+          bgColor="bg-primary"
+          title="Реалистичные карточки"
+          description="Приложение позволяет настраивать карточки под потребности каждого ребенка."
+        />
+        <AdvantageItem
+          bgColor="bg-light-purple"
+          title="Распознавание и создание речи"
+          description="Приложение позволяет настраивать карточки под потребности каждого ребенка."
+        />
+        <AdvantageItem
+          bgColor="bg-orange"
+          title="Отслеживание прогресса"
+          description="Приложение позволяет настраивать карточки под потребности каждого ребенка."
+        />
       </div>
     </section>
   );

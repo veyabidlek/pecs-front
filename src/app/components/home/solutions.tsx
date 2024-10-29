@@ -19,8 +19,8 @@ function SolutionItem({ number, text }: SolutionItemProps) {
 
 export function Solutions() {
   return (
-    <section className="flex pt-24">
-      <div className="w-[40%] h-[350px] relative flex justify-center">
+    <section className="flex flex-col md:flex-row pt-16 md:pt-24 px-4 md:px-0">
+      <div className="w-full md:w-[40%] h-[300px] md:h-[350px] relative flex justify-center mb-8 md:mb-0">
         <Image
           src="/images/index_solution_img.png"
           alt="Solution illustration"
@@ -34,11 +34,11 @@ export function Solutions() {
         </div>
       </div>
 
-      <div>
-        <h4 className="my-6 text-navy-blue font-bold">
+      <div className="w-full md:w-[60%]">
+        <h4 className="my-6 text-navy-blue font-bold text-lg md:text-xl">
           Проблемы, которые мы решаем
         </h4>
-        <ul className="p-0">
+        <ul className="p-0 space-y-4">
           <SolutionItem
             number={1}
             text="Постоянная необходимость распечатывать новые карточки"

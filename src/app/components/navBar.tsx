@@ -1,39 +1,55 @@
-// components/Navbar.jsx
 "use client";
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
-import { User, ChevronDown } from "lucide-react"; // Install lucide-react: npm install lucide-react
+import { User, ChevronDown, Menu, X } from "lucide-react";
 
 const Navbar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const toggleDropdown = () => {
-    setDropdownOpen(!dropdownOpen);
-  };
+  const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
+  const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
 
   const user = {
-    // Replace with your actual user data fetching logic
-    isAuthenticated: true, // Or false, depending on authentication state
-    isStaff: false, // Or true, based on user role
-    firstName: "User", // Replace with user's first name
-    lastName: "", // Replace with user's last name
+    isAuthenticated: true,
+    isStaff: false,
+    firstName: "User",
+    lastName: "",
     username: "user",
   };
 
-  const is_cr = false; // Replace with your logic for is_cr
+  const is_cr = false;
 
   return (
     <header className="sticky top-0 z-50 bg-white">
-      <nav className="flex justify-between items-center py-6">
-        <div className="mr-8">
-          <Image
-            src="/images/logo_soylem_full.png"
-            alt="Logo"
-            width={100}
-            height={40}
-          />
+      <nav className="flex justify-between items-center py-4 px-4 md:py-6 md:px-6">
+        <div className="flex items-center">
+          <Link href="/" className="mr-4 md:mr-8">
+            <Image
+              src="/images/logo_soylem_full.png"
+              alt="Logo"
+              width={80}
+              height={32}
+              className="w-auto h-auto md:w-[100px] md:h-[40px]"
+            />
+          </Link>
         </div>
+
+        {/* Mobile menu button */}
+        <button
+          className="lg:hidden p-2"
+          onClick={toggleMobileMenu}
+          aria-label="Toggle menu"
+        >
+          {mobileMenuOpen ? (
+            <X className="h-6 w-6 text-[var(--main-color)]" />
+          ) : (
+            <Menu className="h-6 w-6 text-[var(--main-color)]" />
+          )}
+        </button>
+
+        {/* Desktop Navigation */}
         <div className="hidden lg:flex space-x-8">
           <Link
             href="#homePage"
@@ -54,29 +70,62 @@ const Navbar = () => {
             О нас
           </Link>
         </div>
-        <div>
+
+        {/* Mobile Navigation */}
+        <div
+          className={`${
+            mobileMenuOpen ? "block" : "hidden"
+          } lg:hidden absolute top-full left-0 right-0 bg-white shadow-lg`}
+        >
+          <div className="px-4 py-2 space-y-2">
+            <Link
+              href="#homePage"
+              className="block py-2 text-[var(--main-color)] hover:text-[var(--main-color)] font-bold"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Главная
+            </Link>
+            <Link
+              href="#aboutApp"
+              className="block py-2 text-[var(--main-color)] hover:text-[var(--main-color)] font-bold"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Наша платформа
+            </Link>
+            <Link
+              href="#team"
+              className="block py-2 text-[var(--main-color)] hover:text-[var(--main-color)] font-bold"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              О нас
+            </Link>
+          </div>
+        </div>
+
+        {/* User Menu */}
+        <div className="hidden md:block">
           {user.isAuthenticated ? (
             <div className="relative inline-block text-left">
               <button
                 onClick={toggleDropdown}
-                className="inline-flex items-center justify-center w-full rounded-md border border-gray-300 px-4 py-2 bg-[var(--main-color)] text-sm font-medium text-white hover:bg-[var(--main-color)]/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                id="menu-button"
-                aria-expanded={dropdownOpen}
-                aria-haspopup="true"
+                className="inline-flex items-center justify-center rounded-md border border-gray-300 px-4 py-2 bg-[var(--main-color)] text-sm font-medium text-white hover:bg-[var(--main-color)]/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
                 <User className="mr-2 h-5 w-5" />
-                {user.firstName || user.lastName
-                  ? `${user.firstName} ${user.lastName}`
-                  : user.username}
+                <span className="hidden sm:inline">
+                  {user.firstName || user.lastName
+                    ? `${user.firstName} ${user.lastName}`
+                    : user.username}
+                </span>
                 <ChevronDown
                   className="ml-2 -mr-1 h-5 w-5"
                   aria-hidden="true"
                 />
               </button>
+
               <div
                 className={`${
                   dropdownOpen ? "block" : "hidden"
-                } bg-white absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-[var(--light-main)] ring-1 ring-black ring-opacity-5 focus:outline-none z-200`} // Increase z-index here
+                } absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-20`}
                 role="menu"
                 aria-orientation="vertical"
                 aria-labelledby="menu-button"
@@ -85,7 +134,6 @@ const Navbar = () => {
                   href={user.isStaff ? "/admin" : "/profile"}
                   className="text-gray-700 block px-4 py-2 text-sm hover:bg-[var(--main-color)] hover:text-white"
                   role="menuitem"
-                  id="menu-item-0"
                 >
                   Мой профиль
                 </a>
@@ -94,7 +142,6 @@ const Navbar = () => {
                     href="/my_boards"
                     className="text-gray-700 block px-4 py-2 text-sm hover:bg-[var(--main-color)] hover:text-white"
                     role="menuitem"
-                    id="menu-item-1"
                   >
                     Мои доски
                   </a>
@@ -103,7 +150,6 @@ const Navbar = () => {
                     href="#"
                     className="text-gray-700 block px-4 py-2 text-sm hover:bg-[var(--main-color)] hover:text-white"
                     role="menuitem"
-                    id="menu-item-2"
                   >
                     Мои подопечные
                   </a>
@@ -112,7 +158,6 @@ const Navbar = () => {
                   href="/progress"
                   className="text-gray-700 block px-4 py-2 text-sm hover:bg-[var(--main-color)] hover:text-white"
                   role="menuitem"
-                  id="menu-item-3"
                 >
                   Аналитика
                 </Link>
@@ -120,7 +165,6 @@ const Navbar = () => {
                   href="/library"
                   className="text-gray-700 block px-4 py-2 text-sm hover:bg-[var(--main-color)] hover:text-white"
                   role="menuitem"
-                  id="menu-item-4"
                 >
                   Библиотека
                 </Link>
@@ -128,7 +172,6 @@ const Navbar = () => {
                   href="#"
                   className="text-gray-700 block px-4 py-2 text-sm hover:bg-[var(--main-color)] hover:text-white"
                   role="menuitem"
-                  id="menu-item-5"
                 >
                   Настройки
                 </a>
@@ -136,7 +179,6 @@ const Navbar = () => {
                   href="/logout"
                   className="text-gray-700 block px-4 py-2 text-sm hover:bg-[var(--main-color)] hover:text-white"
                   role="menuitem"
-                  id="menu-item-6"
                 >
                   Выйти
                 </a>
@@ -149,7 +191,7 @@ const Navbar = () => {
                 className="font-bold text-[var(--text-color)]"
               >
                 <User className="mr-2 h-5 w-5 inline-block align-middle" />
-                Войти
+                <span className="hidden sm:inline">Войти</span>
               </Link>
               <Link
                 href="/signup"
