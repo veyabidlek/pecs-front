@@ -2,6 +2,10 @@
 import { useState } from "react";
 import Link from "next/link";
 import Navbar from "../components/navBar";
+import { useRouter } from "next/navigation";
+import axios from "axios";
+
+const url = process.env.BACKEND_URL;
 
 interface Message {
   text: string;
@@ -9,26 +13,27 @@ interface Message {
 }
 
 const LoginPage: React.FC = () => {
-  const [formData, setFormData] = useState({
-    username: "",
-    password: "",
-  });
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [messages, setMessages] = useState<Message[]>([]);
+  const router = useRouter();
 
-  const [messages] = useState<Message[]>([
-    // Add any default messages here or fetch them from a source
-  ]);
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Your login logic here
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    try {
+      await axios.post(`${url}/login`, {
+        username,
+        password,
+      });
+      alert("Successful login");
+      router.push("/");
+    } catch (err) {
+      console.error("Error submitting registration: ", err);
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { text: "Registration failed. Please try again.", type: "error" },
+      ]);
+    }
   };
 
   return (
@@ -75,26 +80,21 @@ const LoginPage: React.FC = () => {
                 Введите имя пользователя
               </label>
               <input
-                type="text"
-                name="username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="p-2 border rounded w-4/5"
                 required
-                placeholder="Имя пользователя"
-                value={formData.username}
-                onChange={handleChange}
-                className="mt-2 w-4/5 px-5 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-600"
               />
             </div>
 
             <div className="flex flex-col items-center mt-2">
               <label className="w-4/5 text-gray-700">Введите пароль</label>
               <input
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 type="password"
-                name="password"
+                className="p-2 border rounded w-4/5"
                 required
-                placeholder="Пароль"
-                value={formData.password}
-                onChange={handleChange}
-                className="mt-2 w-4/5 px-5 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-600"
               />
             </div>
 
