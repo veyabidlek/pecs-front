@@ -1,16 +1,11 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import Navbar from "../components/navBar";
+import axios from "axios";
 
-interface SignupFormData {
-  first_name: string;
-  last_name: string;
-  email: string;
-  username: string;
-  password: string;
-}
+const url = process.env.BACKEND_URL;
 
 interface Message {
   text: string;
@@ -18,29 +13,34 @@ interface Message {
 }
 
 const SignupPage = () => {
+  const [name, setName] = useState("");
+  const [surname, setSurname] = useState("");
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [role, setRole] = useState<"cg_role" | "cr_role">("cg_role");
   const [messages, setMessages] = useState<Message[]>([]);
-  const { register, handleSubmit } = useForm<SignupFormData>();
+  const router = useRouter();
 
-  const onSubmit = async (data: SignupFormData) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     try {
-      const response = await fetch("/api/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ ...data, role }),
+      await axios.post(`${url}/signup`, {
+        username,
+        first_name: name, // changed to first_name
+        last_name: surname, // changed to last_name
+        email,
+        password,
+        role,
       });
-
-      if (!response.ok) {
-        throw new Error("Signup failed");
-      }
-
-      // Handle successful signup
-      setMessages([{ text: "Successfully registered!", type: "success" }]);
-    } catch (error) {
-      setMessages([{ text: "Registration failed", type: "error" }]);
-      console.error(error);
+      alert("Successful registration");
+      router.push("/login");
+    } catch (err) {
+      console.error("Error submitting registration: ", err);
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { text: "Registration failed. Please try again.", type: "error" },
+      ]);
     }
   };
 
@@ -48,9 +48,9 @@ const SignupPage = () => {
     <div className="min-h-screen mx-auto max-w-7xl px-4 sm:px-8 lg:px-16">
       <Navbar />
       <div className="max-w-2xl mx-auto px-4">
-        <div className="bg-white rounded-2xl shadow-[0_15px_20px_rgba(0,0,0,0.1)]">
+        <div className="bg-white rounded-2xl shadow-lg">
           {/* Title */}
-          <div className="bg-[--main-color] text-white text-2xl font-bold text-center py-5 px-12 rounded-t-2xl">
+          <div className="bg-[--main-color] text-white text-2xl font-bold text-center py-5 rounded-t-2xl">
             <span>Создать аккаунт</span>
           </div>
 
@@ -103,65 +103,66 @@ const SignupPage = () => {
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit(onSubmit)} className="p-5">
-            <div className="space-y-4">
-              <div className="flex flex-col items-center">
-                <label className="w-4/5">Введите ваше имя</label>
-                <input
-                  {...register("first_name", { required: true })}
-                  placeholder="Ваше имя"
-                  className="w-4/5 mt-2.5 px-5 py-2.5 border-2 border-[--dark-grey] rounded-lg"
-                />
-              </div>
+          <form onSubmit={handleSubmit} className="p-5 space-y-4">
+            <div className="flex flex-col items-center">
+              <label className="w-4/5">Введите ваше имя</label>
+              <input
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="p-2 border rounded w-4/5"
+                required
+              />
+            </div>
 
-              <div className="flex flex-col items-center">
-                <label className="w-4/5">Введите вашу фамилию</label>
-                <input
-                  {...register("last_name", { required: true })}
-                  placeholder="Ваша фамилия"
-                  className="w-4/5 mt-2.5 px-5 py-2.5 border-2 border-[--dark-grey] rounded-lg"
-                />
-              </div>
+            <div className="flex flex-col items-center">
+              <label className="w-4/5">Введите вашу фамилию</label>
+              <input
+                value={surname}
+                onChange={(e) => setSurname(e.target.value)}
+                className="p-2 border rounded w-4/5"
+                required
+              />
+            </div>
 
-              <div className="flex flex-col items-center">
-                <label className="w-4/5">Введите ваш email</label>
-                <input
-                  {...register("email", {
-                    required: true,
-                    pattern: /^\S+@\S+\.\S+$/,
-                  })}
-                  placeholder="Ваш email"
-                  className="w-4/5 mt-2.5 px-5 py-2.5 border-2 border-[--dark-grey] rounded-lg"
-                />
-              </div>
+            <div className="flex flex-col items-center">
+              <label className="w-4/5">Введите ваш email</label>
+              <input
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                type="email"
+                className="p-2 border rounded w-4/5"
+                required
+              />
+            </div>
 
-              <div className="flex flex-col items-center">
-                <label className="w-4/5">Введите имя пользователя</label>
-                <input
-                  {...register("username", { required: true })}
-                  placeholder="Имя пользователя"
-                  className="w-4/5 mt-2.5 px-5 py-2.5 border-2 border-[--dark-grey] rounded-lg"
-                />
-              </div>
+            <div className="flex flex-col items-center">
+              <label className="w-4/5">Введите имя пользователя</label>
+              <input
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="p-2 border rounded w-4/5"
+                required
+              />
+            </div>
 
-              <div className="flex flex-col items-center">
-                <label className="w-4/5">Введите пароль</label>
-                <input
-                  {...register("password", { required: true })}
-                  type="password"
-                  placeholder="Пароль"
-                  className="w-4/5 mt-2.5 px-5 py-2.5 border-2 border-[--dark-grey] rounded-lg"
-                />
-              </div>
+            <div className="flex flex-col items-center">
+              <label className="w-4/5">Введите пароль</label>
+              <input
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                type="password"
+                className="p-2 border rounded w-4/5"
+                required
+              />
+            </div>
 
-              <div className="flex flex-col items-center mt-4">
-                <button
-                  type="submit"
-                  className="w-4/5 py-2.5 bg-[--main-color] text-white rounded-lg hover:brightness-90 transition-all"
-                >
-                  Зарегистрироваться
-                </button>
-              </div>
+            <div className="flex flex-col items-center mt-4">
+              <button
+                type="submit"
+                className="w-4/5 py-2.5 bg-[--main-color] text-white rounded-lg hover:brightness-90 transition-all"
+              >
+                Зарегистрироваться
+              </button>
             </div>
 
             <div className="text-center mt-4">

@@ -12,7 +12,7 @@ const Navbar = () => {
   const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
 
   const user = {
-    isAuthenticated: true,
+    isAuthenticated: false,
     isStaff: false,
     firstName: "User",
     lastName: "",
@@ -188,10 +188,9 @@ const Navbar = () => {
             <div className="flex space-x-4">
               <Link
                 href="/login"
-                className="font-bold text-[var(--text-color)]"
+                className="px-4 py-2 bg-[var(--main-color)] text-white rounded-md hover:bg-[var(--main-color)]/90"
               >
-                <User className="mr-2 h-5 w-5 inline-block align-middle" />
-                <span className="hidden sm:inline">Войти</span>
+                Войти
               </Link>
               <Link
                 href="/signup"
