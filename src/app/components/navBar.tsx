@@ -3,8 +3,10 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 import { User, ChevronDown, Menu, X } from "lucide-react";
-
-const Navbar = () => {
+type NavbarProps = {
+  isHomePage: boolean;
+};
+const Navbar = ({ isHomePage }: NavbarProps) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -52,19 +54,19 @@ const Navbar = () => {
         {/* Desktop Navigation */}
         <div className="hidden lg:flex space-x-8">
           <Link
-            href="#homePage"
+            href={isHomePage ? "#homeHero" : "/"}
             className="text-[var(--main-color)] hover:text-[var(--main-color)] font-bold"
           >
             Главная
           </Link>
           <Link
-            href="#aboutApp"
+            href={isHomePage ? "#aboutApp" : "/#aboutApp"}
             className="text-[var(--main-color)] hover:text-[var(--main-color)] font-bold"
           >
             Наша платформа
           </Link>
           <Link
-            href="#team"
+            href={isHomePage ? "#team" : "/#team"}
             className="text-[var(--main-color)] hover:text-[var(--main-color)] font-bold"
           >
             О нас
@@ -79,21 +81,21 @@ const Navbar = () => {
         >
           <div className="px-4 py-2 space-y-2">
             <Link
-              href="#homePage"
+              href={isHomePage ? "#homeHero" : "/"}
               className="block py-2 text-[var(--main-color)] hover:text-[var(--main-color)] font-bold"
               onClick={() => setMobileMenuOpen(false)}
             >
               Главная
             </Link>
             <Link
-              href="#aboutApp"
+              href={isHomePage ? "#aboutApp" : "/"}
               className="block py-2 text-[var(--main-color)] hover:text-[var(--main-color)] font-bold"
               onClick={() => setMobileMenuOpen(false)}
             >
               Наша платформа
             </Link>
             <Link
-              href="#team"
+              href={isHomePage ? "#team" : "/"}
               className="block py-2 text-[var(--main-color)] hover:text-[var(--main-color)] font-bold"
               onClick={() => setMobileMenuOpen(false)}
             >

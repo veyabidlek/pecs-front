@@ -8,7 +8,7 @@ import Navbar from "./components/navBar";
 export default function HomePage() {
   return (
     <main className="min-h-screen mx-auto max-w-7xl px-4 sm:px-8 lg:px-16">
-      <Navbar />
+      <Navbar isHomePage={true} />
       <HomeHero />
       <AboutApp />
       <Advantages />

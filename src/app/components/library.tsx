@@ -49,7 +49,7 @@ const Library: React.FC<LibraryProps> = ({
 
   return (
     <div className="min-h-screen mx-auto max-w-7xl px-4 sm:px-8 lg:px-16">
-      <Navbar />
+      <Navbar isHomePage={false} />
       <h1 className="text-2xl font-bold mt-12 mb-6">Библиотека</h1>
 
       <div className="flex flex-wrap mb-5">

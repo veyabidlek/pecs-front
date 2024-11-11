@@ -38,7 +38,7 @@ const LoginPage: React.FC = () => {
 
   return (
     <div className="min-h-screen mx-auto max-w-7xl px-4 sm:px-8 lg:px-16">
-      <Navbar />
+      <Navbar isHomePage={false} />
       <div className="flex items-center justify-center pt-16">
         <div className="w-full max-w-md bg-white rounded-2xl shadow-lg">
           <div className="bg-[--main-color] text-white text-center py-5 px-12 rounded-t-2xl">

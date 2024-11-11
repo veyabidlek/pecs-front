@@ -46,7 +46,7 @@ const SignupPage = () => {
 
   return (
     <div className="min-h-screen mx-auto max-w-7xl px-4 sm:px-8 lg:px-16">
-      <Navbar />
+      <Navbar isHomePage={false} />
       <div className="max-w-2xl mx-auto px-4">
         <div className="bg-white rounded-2xl shadow-lg">
           {/* Title */}
