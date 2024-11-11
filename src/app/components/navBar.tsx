@@ -3,33 +3,30 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { User, ChevronDown, Menu, X } from "lucide-react";
+import { isAuthenticatedAtom } from "../atoms";
 import { useRouter } from "next/navigation";
-
+import { useAtom } from "jotai";
 type NavbarProps = {
   isHomePage: boolean;
 };
 
 type UserData = {
-  isAuthenticated: boolean;
-  isStaff: boolean;
-  firstName: string;
-  lastName: string;
   username: string;
   userType: string;
+  id: number;
 };
 
 const Navbar = ({ isHomePage }: NavbarProps) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useAtom(isAuthenticatedAtom);
   const [user, setUser] = useState<UserData>({
-    isAuthenticated: false,
-    isStaff: false,
-    firstName: "",
-    lastName: "",
     username: "",
     userType: "",
+    id: 0,
   });
+  const [isCg, setIsCg] = useState(false);
 
   const router = useRouter();
 
@@ -37,19 +34,21 @@ const Navbar = ({ isHomePage }: NavbarProps) => {
     const checkAuth = () => {
       const accessToken = localStorage.getItem("accessToken");
       const userData = localStorage.getItem("userData");
-
+      console.log(userData);
+      console.log(userData);
       if (accessToken && userData) {
         const parsedUserData = JSON.parse(userData);
         setUser({
-          isAuthenticated: true,
-          isStaff: parsedUserData.userType === "staff",
-          firstName: parsedUserData.firstName || "",
-          lastName: parsedUserData.lastName || "",
           username: parsedUserData.username || "",
           userType: parsedUserData.userType || "",
+          id: parsedUserData.id || 0,
         });
+        setIsAuthenticated(true);
+        if (parsedUserData.userType === "caregiver") setIsCg(false);
+        else setIsCg(true);
       }
       setIsLoading(false);
+      console.log(user);
     };
 
     checkAuth();
@@ -63,21 +62,16 @@ const Navbar = ({ isHomePage }: NavbarProps) => {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
       localStorage.removeItem("userData");
-
+      setIsAuthenticated(false);
       setUser({
-        isAuthenticated: false,
-        isStaff: false,
-        firstName: "",
-        lastName: "",
         username: "",
         userType: "",
+        id: 0,
       });
 
       router.push("/");
     }
   };
-
-  const is_cr = user.userType === "caregiver";
 
   return (
     <header className="sticky top-0 z-50 bg-white">
@@ -136,68 +130,149 @@ const Navbar = ({ isHomePage }: NavbarProps) => {
           } lg:hidden absolute top-full left-0 right-0 bg-white shadow-lg`}
         >
           <div className="px-4 py-2 space-y-2">
-            <Link
-              href={isHomePage ? "#homeHero" : "/#homeHero"}
-              className="block py-2 text-[var(--main-color)] hover:text-[var(--main-color)] font-bold"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Главная
-            </Link>
-            <Link
-              href={isHomePage ? "#aboutApp" : "/#aboutApp"}
-              className="block py-2 text-[var(--main-color)] hover:text-[var(--main-color)] font-bold"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Наша платформа
-            </Link>
-            <Link
-              href={isHomePage ? "#team" : "/#team"}
-              className="block py-2 text-[var(--main-color)] hover:text-[var(--main-color)] font-bold"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              О нас
-            </Link>
-            {!isLoading && !user.isAuthenticated && (
-              <div className="flex flex-col gap-2">
-                <button>
+            {!isLoading && isAuthenticated ? (
+              <>
+                {/* User info in mobile menu */}
+                <div className="py-2 border-b border-gray-200">
+                  <div className="flex items-center space-x-2 text-[var(--main-color)]">
+                    <User className="h-5 w-5" />
+                    <span className="font-medium">{user.username}</span>
+                  </div>
+                </div>
+
+                {/* Navigation links */}
+                <Link
+                  href={isHomePage ? "#homeHero" : "/#homeHero"}
+                  className="block py-2 text-[var(--main-color)] hover:text-[var(--main-color)] font-bold"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Главная
+                </Link>
+                <Link
+                  href={isHomePage ? "#aboutApp" : "/#aboutApp"}
+                  className="block py-2 text-[var(--main-color)] hover:text-[var(--main-color)] font-bold"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Наша платформа
+                </Link>
+                <Link
+                  href={isHomePage ? "#team" : "/#team"}
+                  className="block py-2 text-[var(--main-color)] hover:text-[var(--main-color)] font-bold"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  О нас
+                </Link>
+
+                {/* User menu items */}
+                <div className="pt-2 border-t border-gray-200">
+                  <Link
+                    href="/profile"
+                    className="block py-2 text-gray-700 hover:text-[var(--main-color)]"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Мой профиль
+                  </Link>
+                  {isCg ? (
+                    <Link
+                      href="/myboards"
+                      className="block py-2 text-gray-700 hover:text-[var(--main-color)]"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Мои доски
+                    </Link>
+                  ) : (
+                    <Link
+                      href="/mychildren"
+                      className="block py-2 text-gray-700 hover:text-[var(--main-color)]"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Мои подопечные
+                    </Link>
+                  )}
+                  <Link
+                    href="/analytics"
+                    className="block py-2 text-gray-700 hover:text-[var(--main-color)]"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Аналитика
+                  </Link>
+                  <Link
+                    href="/library"
+                    className="block py-2 text-gray-700 hover:text-[var(--main-color)]"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Библиотека
+                  </Link>
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      setMobileMenuOpen(false);
+                    }}
+                    className="w-full text-left py-2 text-gray-700 hover:text-[var(--main-color)]"
+                  >
+                    Выйти
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                {/* Non-authenticated mobile menu */}
+                <Link
+                  href={isHomePage ? "#homeHero" : "/#homeHero"}
+                  className="block py-2 text-[var(--main-color)] hover:text-[var(--main-color)] font-bold"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Главная
+                </Link>
+                <Link
+                  href={isHomePage ? "#aboutApp" : "/#aboutApp"}
+                  className="block py-2 text-[var(--main-color)] hover:text-[var(--main-color)] font-bold"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Наша платформа
+                </Link>
+                <Link
+                  href={isHomePage ? "#team" : "/#team"}
+                  className="block py-2 text-[var(--main-color)] hover:text-[var(--main-color)] font-bold"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  О нас
+                </Link>
+                <div className="flex flex-col gap-2 pt-2 border-t border-gray-200">
                   <Link
                     href="/login"
-                    className="block px-4 py-2 bg-[var(--main-color)] text-white rounded-md hover:bg-[var(--main-color)]/90"
+                    className="block px-4 py-2 bg-[var(--main-color)] text-white rounded-md hover:bg-[var(--main-color)]/90 text-center"
+                    onClick={() => setMobileMenuOpen(false)}
                   >
                     Войти
                   </Link>
-                </button>
-                <button>
                   <Link
                     href="/signup"
-                    className="block px-4 py-2 bg-[var(--main-color)] text-white rounded-md hover:bg-[var(--main-color)]/90"
+                    className="block px-4 py-2 bg-[var(--main-color)] text-white rounded-md hover:bg-[var(--main-color)]/90 text-center"
+                    onClick={() => setMobileMenuOpen(false)}
                   >
                     Регистрация
                   </Link>
-                </button>
-              </div>
+                </div>
+              </>
             )}
           </div>
         </div>
 
-        {/* User Menu */}
+        {/* Desktop User Menu */}
         <div className="hidden lg:block">
           {isLoading ? (
             <div className="w-[200px] h-[40px] bg-gray-200 animate-pulse rounded-md"></div>
           ) : (
             <>
-              {user.isAuthenticated ? (
+              {isAuthenticated ? (
                 <div className="relative inline-block text-left">
                   <button
                     onClick={toggleDropdown}
                     className="inline-flex items-center justify-center rounded-md border border-gray-300 px-4 py-2 bg-[var(--main-color)] text-sm font-medium text-white hover:bg-[var(--main-color)]/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                   >
                     <User className="mr-2 h-5 w-5" />
-                    <span className="hidden sm:inline">
-                      {user.firstName || user.lastName
-                        ? `${user.firstName} ${user.lastName}`
-                        : user.username}
-                    </span>
+                    <span className="hidden sm:inline">{user.username}</span>
                     <ChevronDown
                       className="ml-2 -mr-1 h-5 w-5"
                       aria-hidden="true"
@@ -213,15 +288,15 @@ const Navbar = ({ isHomePage }: NavbarProps) => {
                     aria-labelledby="menu-button"
                   >
                     <Link
-                      href={user.isStaff ? "/admin" : "/profile"}
+                      href="/profile"
                       className="text-gray-700 block px-4 py-2 text-sm hover:bg-[var(--main-color)] hover:text-white"
                       role="menuitem"
                     >
                       Мой профиль
                     </Link>
-                    {is_cr ? (
+                    {isCg ? (
                       <Link
-                        href="/my_boards"
+                        href="/myboards"
                         className="text-gray-700 block px-4 py-2 text-sm hover:bg-[var(--main-color)] hover:text-white"
                         role="menuitem"
                       >
@@ -229,7 +304,7 @@ const Navbar = ({ isHomePage }: NavbarProps) => {
                       </Link>
                     ) : (
                       <Link
-                        href="/my_clients"
+                        href="/mychildren"
                         className="text-gray-700 block px-4 py-2 text-sm hover:bg-[var(--main-color)] hover:text-white"
                         role="menuitem"
                       >
@@ -237,7 +312,7 @@ const Navbar = ({ isHomePage }: NavbarProps) => {
                       </Link>
                     )}
                     <Link
-                      href="/progress"
+                      href="/analytics"
                       className="text-gray-700 block px-4 py-2 text-sm hover:bg-[var(--main-color)] hover:text-white"
                       role="menuitem"
                     >
@@ -249,13 +324,6 @@ const Navbar = ({ isHomePage }: NavbarProps) => {
                       role="menuitem"
                     >
                       Библиотека
-                    </Link>
-                    <Link
-                      href="/settings"
-                      className="text-gray-700 block px-4 py-2 text-sm hover:bg-[var(--main-color)] hover:text-white"
-                      role="menuitem"
-                    >
-                      Настройки
                     </Link>
                     <button
                       onClick={handleLogout}

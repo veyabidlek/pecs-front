@@ -37,8 +37,10 @@ const LoginPage: React.FC = () => {
           username: response.data.username,
         })
       );
-      alert("Successful login");
-      router.push("/");
+      setMessage({ text: "Успешный вход!", type: "success" });
+      setTimeout(() => {
+        router.push("/");
+      }, 1500);
     } catch (err) {
       console.error("Error submitting login: ", err);
       setMessage({
