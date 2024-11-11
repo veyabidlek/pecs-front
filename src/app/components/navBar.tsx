@@ -3,7 +3,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { User, ChevronDown, Menu, X } from "lucide-react";
-import { isAuthenticatedAtom } from "../atoms";
+import { isAuthenticatedAtom, userDataAtom } from "../atoms";
+import { Recipient } from "../types";
 import { useRouter } from "next/navigation";
 import { useAtom } from "jotai";
 type NavbarProps = {
@@ -26,6 +27,7 @@ const Navbar = ({ isHomePage }: NavbarProps) => {
     userType: "",
     id: 0,
   });
+  const [, setUserData] = useAtom(userDataAtom);
   const [isCg, setIsCg] = useState(false);
 
   const router = useRouter();
@@ -34,8 +36,6 @@ const Navbar = ({ isHomePage }: NavbarProps) => {
     const checkAuth = () => {
       const accessToken = localStorage.getItem("accessToken");
       const userData = localStorage.getItem("userData");
-      console.log(userData);
-      console.log(userData);
       if (accessToken && userData) {
         const parsedUserData = JSON.parse(userData);
         setUser({
@@ -48,7 +48,6 @@ const Navbar = ({ isHomePage }: NavbarProps) => {
         else setIsCg(true);
       }
       setIsLoading(false);
-      console.log(user);
     };
 
     checkAuth();
@@ -62,6 +61,19 @@ const Navbar = ({ isHomePage }: NavbarProps) => {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
       localStorage.removeItem("userData");
+      setUserData({
+        date_joined: "",
+        email: "",
+        first_name: "",
+        is_active: false,
+        is_cg: false,
+        last_name: "",
+        profile_pic: "",
+        recipients: [] as Recipient[],
+        user: 0,
+        user_id: "0",
+        username: "",
+      });
       setIsAuthenticated(false);
       setUser({
         username: "",

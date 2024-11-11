@@ -4,7 +4,8 @@ import Link from "next/link";
 import Navbar from "../components/navBar";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-
+import { userTypeAtom } from "../atoms";
+import { useAtom } from "jotai";
 const url = process.env.BACKEND_URL;
 
 interface Message {
@@ -17,6 +18,7 @@ const LoginPage: React.FC = () => {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState<Message | null>(null);
   const [messageVisible, setMessageVisible] = useState(true);
+  const [, setUserType] = useAtom(userTypeAtom);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -37,6 +39,12 @@ const LoginPage: React.FC = () => {
           username: response.data.username,
         })
       );
+      const userData = localStorage.getItem("userData");
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      setUserType(JSON.parse(userData).userType);
       setMessage({ text: "Успешный вход!", type: "success" });
       setTimeout(() => {
         router.push("/");
