@@ -21,19 +21,31 @@ const LoginPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await axios.post(`${url}/login`, {
+      const response = await axios.post(`${url}/login`, {
         username,
         password,
       });
+      localStorage.setItem("accessToken", response.data.access);
+      localStorage.setItem("refreshToken", response.data.refresh);
+      localStorage.setItem(
+        "userData",
+        JSON.stringify({
+          userType: response.data.user_type,
+          userId: response.data.user_id,
+          username: response.data.username,
+        })
+      );
       alert("Successful login");
       router.push("/");
     } catch (err) {
       console.error("Error submitting registration: ", err);
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { text: "Registration failed. Please try again.", type: "error" },
+      setMessages(() => [
+        { text: "Login failed. Please try again.", type: "error" },
       ]);
     }
+  };
+  const handleCloseMessage = (index: number) => {
+    setMessages(messages.filter((_, i) => i !== index));
   };
 
   return (
@@ -54,9 +66,7 @@ const LoginPage: React.FC = () => {
               <span className="block sm:inline">{message.text}</span>
               <button
                 className="absolute top-0 right-0 px-4 py-3"
-                onClick={() => {
-                  // Add close handler
-                }}
+                onClick={() => handleCloseMessage(index)}
               >
                 <span className="sr-only">Close</span>
                 <svg

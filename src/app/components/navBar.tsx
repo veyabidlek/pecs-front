@@ -1,27 +1,83 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { User, ChevronDown, Menu, X } from "lucide-react";
+import { useRouter } from "next/navigation";
+
 type NavbarProps = {
   isHomePage: boolean;
 };
+
+type UserData = {
+  isAuthenticated: boolean;
+  isStaff: boolean;
+  firstName: string;
+  lastName: string;
+  username: string;
+  userType: string;
+};
+
 const Navbar = ({ isHomePage }: NavbarProps) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [user, setUser] = useState<UserData>({
+    isAuthenticated: false,
+    isStaff: false,
+    firstName: "",
+    lastName: "",
+    username: "",
+    userType: "",
+  });
+
+  const router = useRouter();
+
+  useEffect(() => {
+    const checkAuth = () => {
+      const accessToken = localStorage.getItem("accessToken");
+      const userData = localStorage.getItem("userData");
+
+      if (accessToken && userData) {
+        const parsedUserData = JSON.parse(userData);
+        setUser({
+          isAuthenticated: true,
+          isStaff: parsedUserData.userType === "staff",
+          firstName: parsedUserData.firstName || "",
+          lastName: parsedUserData.lastName || "",
+          username: parsedUserData.username || "",
+          userType: parsedUserData.userType || "",
+        });
+      }
+      setIsLoading(false);
+    };
+
+    checkAuth();
+  }, []);
 
   const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
   const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
 
-  const user = {
-    isAuthenticated: false,
-    isStaff: false,
-    firstName: "User",
-    lastName: "",
-    username: "user",
+  const handleLogout = () => {
+    if (confirm("Are you sure you want to log out?")) {
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("userData");
+
+      setUser({
+        isAuthenticated: false,
+        isStaff: false,
+        firstName: "",
+        lastName: "",
+        username: "",
+        userType: "",
+      });
+
+      router.push("/");
+    }
   };
 
-  const is_cr = false;
+  const is_cr = user.userType === "caregiver";
 
   return (
     <header className="sticky top-0 z-50 bg-white">
@@ -101,124 +157,132 @@ const Navbar = ({ isHomePage }: NavbarProps) => {
             >
               О нас
             </Link>
-            <div className="flex flex-col gap-2">
-              <button>
-                <Link
-                  href="/login"
-                  className="block px-4 py-2 bg-[var(--main-color)] text-white rounded-md hover:bg-[var(--main-color)]/90"
-                >
-                  Войти
-                </Link>
-              </button>
-              <button>
-                <Link
-                  href="/signup"
-                  className="block px-4 py-2 bg-[var(--main-color)] text-white rounded-md hover:bg-[var(--main-color)]/90"
-                >
-                  Регистрация
-                </Link>
-              </button>
-            </div>
+            {!isLoading && !user.isAuthenticated && (
+              <div className="flex flex-col gap-2">
+                <button>
+                  <Link
+                    href="/login"
+                    className="block px-4 py-2 bg-[var(--main-color)] text-white rounded-md hover:bg-[var(--main-color)]/90"
+                  >
+                    Войти
+                  </Link>
+                </button>
+                <button>
+                  <Link
+                    href="/signup"
+                    className="block px-4 py-2 bg-[var(--main-color)] text-white rounded-md hover:bg-[var(--main-color)]/90"
+                  >
+                    Регистрация
+                  </Link>
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
         {/* User Menu */}
         <div className="hidden lg:block">
-          {user.isAuthenticated ? (
-            <div className="relative inline-block text-left">
-              <button
-                onClick={toggleDropdown}
-                className="inline-flex items-center justify-center rounded-md border border-gray-300 px-4 py-2 bg-[var(--main-color)] text-sm font-medium text-white hover:bg-[var(--main-color)]/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
-                <User className="mr-2 h-5 w-5" />
-                <span className="hidden sm:inline">
-                  {user.firstName || user.lastName
-                    ? `${user.firstName} ${user.lastName}`
-                    : user.username}
-                </span>
-                <ChevronDown
-                  className="ml-2 -mr-1 h-5 w-5"
-                  aria-hidden="true"
-                />
-              </button>
-
-              <div
-                className={`${
-                  dropdownOpen ? "block" : "hidden"
-                } absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-20`}
-                role="menu"
-                aria-orientation="vertical"
-                aria-labelledby="menu-button"
-              >
-                <a
-                  href={user.isStaff ? "/admin" : "/profile"}
-                  className="text-gray-700 block px-4 py-2 text-sm hover:bg-[var(--main-color)] hover:text-white"
-                  role="menuitem"
-                >
-                  Мой профиль
-                </a>
-                {is_cr ? (
-                  <a
-                    href="/my_boards"
-                    className="text-gray-700 block px-4 py-2 text-sm hover:bg-[var(--main-color)] hover:text-white"
-                    role="menuitem"
-                  >
-                    Мои доски
-                  </a>
-                ) : (
-                  <a
-                    href="#"
-                    className="text-gray-700 block px-4 py-2 text-sm hover:bg-[var(--main-color)] hover:text-white"
-                    role="menuitem"
-                  >
-                    Мои подопечные
-                  </a>
-                )}
-                <Link
-                  href="/progress"
-                  className="text-gray-700 block px-4 py-2 text-sm hover:bg-[var(--main-color)] hover:text-white"
-                  role="menuitem"
-                >
-                  Аналитика
-                </Link>
-                <Link
-                  href="/library"
-                  className="text-gray-700 block px-4 py-2 text-sm hover:bg-[var(--main-color)] hover:text-white"
-                  role="menuitem"
-                >
-                  Библиотека
-                </Link>
-                <a
-                  href="#"
-                  className="text-gray-700 block px-4 py-2 text-sm hover:bg-[var(--main-color)] hover:text-white"
-                  role="menuitem"
-                >
-                  Настройки
-                </a>
-                <a
-                  href="/logout"
-                  className="text-gray-700 block px-4 py-2 text-sm hover:bg-[var(--main-color)] hover:text-white"
-                  role="menuitem"
-                >
-                  Выйти
-                </a>
-              </div>
-            </div>
+          {isLoading ? (
+            <div className="w-[200px] h-[40px] bg-gray-200 animate-pulse rounded-md"></div>
           ) : (
-            <div className="flex space-x-4">
-              <Link
-                href="/login"
-                className="px-4 py-2 bg-[var(--main-color)] text-white rounded-md hover:bg-[var(--main-color)]/90"
-              >
-                Войти
-              </Link>
-              <Link
-                href="/signup"
-                className="px-4 py-2 bg-[var(--main-color)] text-white rounded-md hover:bg-[var(--main-color)]/90"
-              >
-                Регистрация
-              </Link>
-            </div>
+            <>
+              {user.isAuthenticated ? (
+                <div className="relative inline-block text-left">
+                  <button
+                    onClick={toggleDropdown}
+                    className="inline-flex items-center justify-center rounded-md border border-gray-300 px-4 py-2 bg-[var(--main-color)] text-sm font-medium text-white hover:bg-[var(--main-color)]/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  >
+                    <User className="mr-2 h-5 w-5" />
+                    <span className="hidden sm:inline">
+                      {user.firstName || user.lastName
+                        ? `${user.firstName} ${user.lastName}`
+                        : user.username}
+                    </span>
+                    <ChevronDown
+                      className="ml-2 -mr-1 h-5 w-5"
+                      aria-hidden="true"
+                    />
+                  </button>
+
+                  <div
+                    className={`${
+                      dropdownOpen ? "block" : "hidden"
+                    } absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-20`}
+                    role="menu"
+                    aria-orientation="vertical"
+                    aria-labelledby="menu-button"
+                  >
+                    <Link
+                      href={user.isStaff ? "/admin" : "/profile"}
+                      className="text-gray-700 block px-4 py-2 text-sm hover:bg-[var(--main-color)] hover:text-white"
+                      role="menuitem"
+                    >
+                      Мой профиль
+                    </Link>
+                    {is_cr ? (
+                      <Link
+                        href="/my_boards"
+                        className="text-gray-700 block px-4 py-2 text-sm hover:bg-[var(--main-color)] hover:text-white"
+                        role="menuitem"
+                      >
+                        Мои доски
+                      </Link>
+                    ) : (
+                      <Link
+                        href="/my_clients"
+                        className="text-gray-700 block px-4 py-2 text-sm hover:bg-[var(--main-color)] hover:text-white"
+                        role="menuitem"
+                      >
+                        Мои подопечные
+                      </Link>
+                    )}
+                    <Link
+                      href="/progress"
+                      className="text-gray-700 block px-4 py-2 text-sm hover:bg-[var(--main-color)] hover:text-white"
+                      role="menuitem"
+                    >
+                      Аналитика
+                    </Link>
+                    <Link
+                      href="/library"
+                      className="text-gray-700 block px-4 py-2 text-sm hover:bg-[var(--main-color)] hover:text-white"
+                      role="menuitem"
+                    >
+                      Библиотека
+                    </Link>
+                    <Link
+                      href="/settings"
+                      className="text-gray-700 block px-4 py-2 text-sm hover:bg-[var(--main-color)] hover:text-white"
+                      role="menuitem"
+                    >
+                      Настройки
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="text-gray-700 w-full text-left px-4 py-2 text-sm hover:bg-[var(--main-color)] hover:text-white"
+                      role="menuitem"
+                    >
+                      Выйти
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex space-x-4">
+                  <Link
+                    href="/login"
+                    className="px-4 py-2 bg-[var(--main-color)] text-white rounded-md hover:bg-[var(--main-color)]/90"
+                  >
+                    Войти
+                  </Link>
+                  <Link
+                    href="/signup"
+                    className="px-4 py-2 bg-[var(--main-color)] text-white rounded-md hover:bg-[var(--main-color)]/90"
+                  >
+                    Регистрация
+                  </Link>
+                </div>
+              )}
+            </>
           )}
         </div>
       </nav>
