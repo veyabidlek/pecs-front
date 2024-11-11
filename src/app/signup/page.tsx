@@ -19,28 +19,33 @@ const SignupPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState<"cg_role" | "cr_role">("cg_role");
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [message, setMessage] = useState<Message | null>(null);
+  const [messageVisible, setMessageVisible] = useState(true);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setMessageVisible(true);
+
     try {
       await axios.post(`${url}/signup`, {
         username,
-        first_name: name, // changed to first_name
-        last_name: surname, // changed to last_name
+        first_name: name,
+        last_name: surname,
         email,
         password,
         role,
       });
-      alert("Successful registration");
-      router.push("/login");
+      setMessage({ text: "Регистрация успешна!", type: "success" });
+      setTimeout(() => {
+        router.push("/login");
+      }, 1500);
     } catch (err) {
       console.error("Error submitting registration: ", err);
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { text: "Registration failed. Please try again.", type: "error" },
-      ]);
+      setMessage({
+        text: "Ошибка регистрации. Пожалуйста, попробуйте снова.",
+        type: "error",
+      });
     }
   };
 
@@ -49,36 +54,29 @@ const SignupPage = () => {
       <Navbar isHomePage={false} />
       <div className="max-w-2xl mx-auto px-4">
         <div className="bg-white rounded-2xl shadow-lg">
-          {/* Title */}
           <div className="bg-[--main-color] text-white text-2xl font-bold text-center py-5 rounded-t-2xl">
             <span>Создать аккаунт</span>
           </div>
 
-          {/* Alert Messages */}
-          {messages.map((message, index) => (
+          {message && messageVisible && (
             <div
-              key={index}
-              className={`flex justify-between items-center p-4 mb-4 ${
-                message.type === "warning"
-                  ? "bg-yellow-100 text-yellow-700"
-                  : message.type === "success"
-                  ? "bg-green-100 text-green-700"
-                  : "bg-red-100 text-red-700"
-              }`}
+              className={`${
+                message.type === "success"
+                  ? "bg-green-100 border-green-400 text-green-700"
+                  : "bg-red-100 border-red-400 text-red-700"
+              } border px-4 py-3 relative mx-4 mt-4 rounded flex justify-between items-center`}
+              role="alert"
             >
-              {message.text}
+              <span className="block sm:inline">{message.text}</span>
               <button
-                onClick={() =>
-                  setMessages(messages.filter((_, i) => i !== index))
-                }
-                className="text-xl font-bold"
+                className="text-sm opacity-75 hover:opacity-100"
+                onClick={() => setMessageVisible(false)}
               >
-                ×
+                ✕
               </button>
             </div>
-          ))}
+          )}
 
-          {/* Role Selection */}
           <div className="flex justify-center mt-5">
             <button
               onClick={() => setRole("cg_role")}
@@ -102,7 +100,6 @@ const SignupPage = () => {
             </button>
           </div>
 
-          {/* Form */}
           <form onSubmit={handleSubmit} className="p-5 space-y-4">
             <div className="flex flex-col items-center">
               <label className="w-4/5">Введите ваше имя</label>

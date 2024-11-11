@@ -15,11 +15,13 @@ interface Message {
 const LoginPage: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [message, setMessage] = useState<Message | null>(null);
+  const [messageVisible, setMessageVisible] = useState(true);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setMessageVisible(true);
     try {
       const response = await axios.post(`${url}/login`, {
         username,
@@ -38,14 +40,12 @@ const LoginPage: React.FC = () => {
       alert("Successful login");
       router.push("/");
     } catch (err) {
-      console.error("Error submitting registration: ", err);
-      setMessages(() => [
-        { text: "Login failed. Please try again.", type: "error" },
-      ]);
+      console.error("Error submitting login: ", err);
+      setMessage({
+        text: "Ошибка при входе. Пожалуйста, попробуйте снова.",
+        type: "error",
+      });
     }
-  };
-  const handleCloseMessage = (index: number) => {
-    setMessages(messages.filter((_, i) => i !== index));
   };
 
   return (
@@ -57,32 +57,24 @@ const LoginPage: React.FC = () => {
             <h1 className="text-2xl font-bold">Добро пожаловать в SӨYLEM</h1>
           </div>
 
-          {messages.map((message, index) => (
+          {message && messageVisible && (
             <div
-              key={index}
-              className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 relative mx-4 mt-4 rounded"
+              className={`${
+                message.type === "success"
+                  ? "bg-green-100 border-green-400 text-green-700"
+                  : "bg-red-100 border-red-400 text-red-700"
+              } border px-4 py-3 relative mx-4 mt-4 rounded flex justify-between items-center`}
               role="alert"
             >
               <span className="block sm:inline">{message.text}</span>
               <button
-                className="absolute top-0 right-0 px-4 py-3"
-                onClick={() => handleCloseMessage(index)}
+                className="text-sm opacity-75 hover:opacity-100"
+                onClick={() => setMessageVisible(false)}
               >
-                <span className="sr-only">Close</span>
-                <svg
-                  className="h-4 w-4"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                    clipRule="evenodd"
-                  />
-                </svg>
+                ✕
               </button>
             </div>
-          ))}
+          )}
 
           <form onSubmit={handleSubmit} className="px-6 py-4">
             <div className="flex flex-col items-center mt-2">
