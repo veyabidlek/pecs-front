@@ -101,11 +101,29 @@ const Navbar = ({ isHomePage }: NavbarProps) => {
             >
               О нас
             </Link>
+            <div className="flex flex-col gap-2">
+              <button>
+                <Link
+                  href="/login"
+                  className="block px-4 py-2 bg-[var(--main-color)] text-white rounded-md hover:bg-[var(--main-color)]/90"
+                >
+                  Войти
+                </Link>
+              </button>
+              <button>
+                <Link
+                  href="/signup"
+                  className="block px-4 py-2 bg-[var(--main-color)] text-white rounded-md hover:bg-[var(--main-color)]/90"
+                >
+                  Регистрация
+                </Link>
+              </button>
+            </div>
           </div>
         </div>
 
         {/* User Menu */}
-        <div className="hidden md:block">
+        <div className="hidden lg:block">
           {user.isAuthenticated ? (
             <div className="relative inline-block text-left">
               <button
