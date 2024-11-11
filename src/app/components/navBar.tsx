@@ -81,21 +81,21 @@ const Navbar = ({ isHomePage }: NavbarProps) => {
         >
           <div className="px-4 py-2 space-y-2">
             <Link
-              href={isHomePage ? "#homeHero" : "/"}
+              href={isHomePage ? "#homeHero" : "/#homeHero"}
               className="block py-2 text-[var(--main-color)] hover:text-[var(--main-color)] font-bold"
               onClick={() => setMobileMenuOpen(false)}
             >
               Главная
             </Link>
             <Link
-              href={isHomePage ? "#aboutApp" : "/"}
+              href={isHomePage ? "#aboutApp" : "/#aboutApp"}
               className="block py-2 text-[var(--main-color)] hover:text-[var(--main-color)] font-bold"
               onClick={() => setMobileMenuOpen(false)}
             >
               Наша платформа
             </Link>
             <Link
-              href={isHomePage ? "#team" : "/"}
+              href={isHomePage ? "#team" : "/#team"}
               className="block py-2 text-[var(--main-color)] hover:text-[var(--main-color)] font-bold"
               onClick={() => setMobileMenuOpen(false)}
             >
