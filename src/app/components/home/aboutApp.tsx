@@ -23,13 +23,13 @@ export function AboutApp() {
         </div>
 
         {/* Image container */}
-        <div className="relative w-full md:flex-1 h-[300px] sm:h-[400px] md:h-[650px] mt-8 md:mt-0 flex justify-center md:justify-end px-4 md:px-8">
+        <div className="relative w-full md:flex-1 h-[300px] sm:h-[400px] md:h-[650px] md:mt-0 flex justify-center md:justify-end px-4 md:px-8">
           <Image
             src="/images/index_aboutApp_tablet.png"
             alt="App tablet view"
             width={900}
             height={700}
-            className="md:absolute md:top-[200px] md:right-0 z-10 w-auto h-auto scale-75 md:scale-100"
+            className="md:absolute md:top-[80px] md:right-0 z-10 w-auto h-auto scale-120 md:scale-100"
           />
         </div>
       </div>

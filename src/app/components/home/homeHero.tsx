@@ -26,10 +26,10 @@ export function HomeHero() {
       {/* Image container */}
       <div className="relative w-full md:flex-1 h-[300px] sm:h-[400px] md:h-[550px] mt-8 md:mt-0 flex justify-center md:justify-end">
         <Image
-          src="/images/index_homePage.png"
+          src="/images/kidonhomepage.png"
           alt="Home illustration"
-          width={280} // Adjust width for small screens
-          height={380} // Adjust height for small screens
+          width={560} // Adjust width for small screens
+          height={560} // Adjust height for small screens
           className="md:absolute md:top-1/2 md:-translate-y-1/2 z-10"
         />
       </div>
