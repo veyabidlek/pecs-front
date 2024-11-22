@@ -93,8 +93,8 @@ const Navbar = ({ isHomePage }: NavbarProps) => {
             <Image
               src="/images/logo_soylem_full.png"
               alt="Logo"
-              width={80}
-              height={32}
+              width={64}
+              height={64}
               className="w-auto h-auto md:w-[100px] md:h-[40px]"
             />
           </Link>
@@ -117,19 +117,19 @@ const Navbar = ({ isHomePage }: NavbarProps) => {
         <div className="hidden lg:flex space-x-8">
           <Link
             href={isHomePage ? "#homeHero" : "/"}
-            className="text-[var(--main-color)] hover:text-[var(--main-color)] font-bold"
+            className="text-[var(--main-color)] hover:text-[var(--main-color)] font-bold hover:underline"
           >
             Главная
           </Link>
           <Link
             href={isHomePage ? "#aboutApp" : "/#aboutApp"}
-            className="text-[var(--main-color)] hover:text-[var(--main-color)] font-bold"
+            className="text-[var(--main-color)] hover:text-[var(--main-color)] font-bold hover:underline"
           >
             Наша платформа
           </Link>
           <Link
             href={isHomePage ? "#team" : "/#team"}
-            className="text-[var(--main-color)] hover:text-[var(--main-color)] font-bold"
+            className="text-[var(--main-color)] hover:text-[var(--main-color)] font-bold hover:underline"
           >
             О нас
           </Link>

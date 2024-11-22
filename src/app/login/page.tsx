@@ -93,6 +93,7 @@ const LoginPage: React.FC = () => {
               </label>
               <input
                 value={username}
+                placeholder="Имя пользователя"
                 onChange={(e) => setUsername(e.target.value)}
                 className="p-2 border rounded w-4/5"
                 required
@@ -103,6 +104,7 @@ const LoginPage: React.FC = () => {
               <label className="w-4/5 text-gray-700">Введите пароль</label>
               <input
                 value={password}
+                placeholder="Пароль"
                 onChange={(e) => setPassword(e.target.value)}
                 type="password"
                 className="p-2 border rounded w-4/5"
@@ -123,7 +125,7 @@ const LoginPage: React.FC = () => {
               <span className="text-gray-600">Впервые здесь? </span>
               <Link
                 href="/signup"
-                className="text-gray-900 hover:text-[--main-color] transition-colors"
+                className="text-gray-900 hover:text-[--main-color] transition-colors underline"
               >
                 Зарегистрироваться
               </Link>

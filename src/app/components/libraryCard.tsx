@@ -1,7 +1,7 @@
 // components/LibraryCard.tsx
 
 import Link from "next/link";
-
+import Image from "next/image";
 interface LibraryCardProps {
   category: {
     id: number;
@@ -17,7 +17,7 @@ const LibraryCard: React.FC<LibraryCardProps> = ({ category }) => {
     <div className="w-1/5 border border-gray-200 rounded-md p-4 text-center">
       <Link href={`/category/${category.name}/${category.id}`}>
         <a>
-          <img
+          <Image
             src={imageSrc}
             alt={category.name}
             className="w-full h-48 object-cover mb-2 rounded"

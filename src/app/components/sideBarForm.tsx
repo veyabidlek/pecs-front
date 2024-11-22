@@ -40,8 +40,8 @@ const SidebarForm: React.FC<SidebarFormProps> = ({
       formData.append("public", "true"); // Adjust if needed
 
       if (formType === "folder") {
-        formData.append("category", 1); // Replace "1" with a real category ID
-        formData.append("creator", 7); // Replace "1" with a real creator ID
+        formData.append("category", "1"); // Replace "1" with a real category ID
+        formData.append("creator", "7"); // Replace "1" with a real creator ID
       } else if (formType === "image" && image) {
         formData.append("image", image);
       }
