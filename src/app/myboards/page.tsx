@@ -4,7 +4,6 @@ import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSquareXmark, faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import Navbar from "../components/navBar";
-
 interface Board {
   id: number;
   name: string;

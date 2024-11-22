@@ -27,7 +27,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/api/createSentence.js"
+    "src/gpt/createSentence.js"
   ],
   "exclude": ["node_modules"]
 }

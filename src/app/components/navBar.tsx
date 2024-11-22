@@ -3,10 +3,12 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { User, ChevronDown, Menu, X } from "lucide-react";
-import { isAuthenticatedAtom, userDataAtom } from "../atoms";
+import { userDataAtom } from "../atoms";
 import { Recipient } from "../types";
 import { useRouter } from "next/navigation";
 import { useAtom } from "jotai";
+import { isAuthenticated } from "@/script/isAuthenticated";
+import { logOut } from "@/script/logout";
 type NavbarProps = {
   isHomePage: boolean;
 };
@@ -21,7 +23,6 @@ const Navbar = ({ isHomePage }: NavbarProps) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useAtom(isAuthenticatedAtom);
   const [user, setUser] = useState<UserData>({
     username: "",
     userType: "",
@@ -43,7 +44,6 @@ const Navbar = ({ isHomePage }: NavbarProps) => {
           userType: parsedUserData.userType || "",
           id: parsedUserData.id || 0,
         });
-        setIsAuthenticated(true);
         if (parsedUserData.userType === "caregiver") setIsCg(false);
         else setIsCg(true);
       }
@@ -58,9 +58,7 @@ const Navbar = ({ isHomePage }: NavbarProps) => {
 
   const handleLogout = () => {
     if (confirm("Are you sure you want to log out?")) {
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("refreshToken");
-      localStorage.removeItem("userData");
+      logOut();
       setUserData({
         date_joined: "",
         email: "",
@@ -74,7 +72,6 @@ const Navbar = ({ isHomePage }: NavbarProps) => {
         user_id: "0",
         username: "",
       });
-      setIsAuthenticated(false);
       setUser({
         username: "",
         userType: "",
@@ -142,7 +139,7 @@ const Navbar = ({ isHomePage }: NavbarProps) => {
           } lg:hidden absolute top-full left-0 right-0 bg-white shadow-lg`}
         >
           <div className="px-4 py-2 space-y-2">
-            {!isLoading && isAuthenticated ? (
+            {!isLoading && isAuthenticated() ? (
               <>
                 {/* User info in mobile menu */}
                 <div className="py-2 border-b border-gray-200">
@@ -277,7 +274,7 @@ const Navbar = ({ isHomePage }: NavbarProps) => {
             <div className="w-[200px] h-[40px] bg-gray-200 animate-pulse rounded-md"></div>
           ) : (
             <>
-              {isAuthenticated ? (
+              {isAuthenticated() ? (
                 <div className="relative inline-block text-left">
                   <button
                     onClick={toggleDropdown}

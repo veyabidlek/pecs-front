@@ -1,7 +1,6 @@
 import { atom } from "jotai";
 import { Recipient } from "./types";
 
-export const isAuthenticatedAtom = atom(false);
 export const userTypeAtom = atom("");
 
 export const userDataAtom = atom({
