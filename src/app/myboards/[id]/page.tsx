@@ -249,6 +249,8 @@ const BoardPage: React.FC = () => {
                           <div className="card">
                             <div className="card-block">
                               <Image
+                                height={64}
+                                width={64}
                                 src={img.src}
                                 alt={img.label}
                                 className="card-img-top w-16 h-16 object-cover"
@@ -333,6 +335,8 @@ const BoardPage: React.FC = () => {
                     <div className="card">
                       <div className="card-block">
                         <Image
+                          height={64}
+                          width={64}
                           src={img.src}
                           alt={img.label}
                           className="card-img-top w-16 h-16 object-cover"
@@ -395,6 +399,8 @@ const BoardPage: React.FC = () => {
                       >
                         <div className="card-block text-center">
                           <Image
+                            height={64}
+                            width={64}
                             src={image.src}
                             alt={image.label}
                             className="card-img-top w-16 h-16 object-cover"
